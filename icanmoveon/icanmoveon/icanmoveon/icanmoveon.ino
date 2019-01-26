@@ -45,7 +45,7 @@ const int part2Pin = 3;
 const int part3Pin = 4;
 const int part4Pin = 5;
 const int part5Pin = 6;
-const int resetPin = 7;
+//const int resetPin = 7;
 
 int partStates[REGIONS] { REGION_OFF, REGION_OFF, REGION_OFF, REGION_OFF, REGION_OFF };
 
@@ -72,9 +72,9 @@ void loop() {
     if (partStates[i] == REGION_OFF) {
       c = matrix.Color333(0, 0, 0);
     } else if (partStates[i] == REGION_CORRECT) {
-      c = matrix.Color333(7, 7, 7);
+      c = matrix.Color333(6, 7, 6);
     } else if (partStates[i] == REGION_INCORRECT) {
-      c = matrix.Color333(7, 2, 2);
+      c = matrix.Color333(3, 0, 0);
     } else if (partStates[i] == REGION_END) {
       c = matrix.Color333(3, 3, 7);
     }
@@ -82,33 +82,92 @@ void loop() {
     matrix.fillRect(regions[i][0], regions[i][1], regions[i][2], regions[i][3], c);
   }
 
-  delay(2000);
-  nextState();
+  delay(100);
+
+  readBoard();
 }
 
-void nextState() {
+void readBoard() {
+  int pinReads [REGIONS] { 0, 0, 0, 0, 0 };
+  int i;
+  pinReads[0] = digitalRead(part1Pin);
+  pinReads[1] = digitalRead(part2Pin);
+  pinReads[2] = digitalRead(part3Pin);
+  pinReads[3] = digitalRead(part4Pin);
+  pinReads[4] = digitalRead(part5Pin);
+
   Serial.print("Parts: ");
-  Serial.print(partStates[0]);
+  Serial.print(pinReads[0]);
   Serial.print(", ");
-  Serial.print(partStates[1]);
+  Serial.print(pinReads[1]);
   Serial.print(", ");
-  Serial.print(partStates[2]);
+  Serial.print(pinReads[2]);
   Serial.print(", ");
-  Serial.print(partStates[3]);
+  Serial.print(pinReads[3]);
   Serial.print(", ");
-  Serial.print(partStates[4]);
+  Serial.print(pinReads[4]);
+  Serial.println(".");
   
-  if (currentPart == REGIONS) {
+  if (currentPart == 0) {
+    if (!pinReads[1] && !pinReads[2] && !pinReads[3] && !pinReads[4]) {
+      if (pinReads[0]) {
+        partStates[0] = REGION_CORRECT;
+        currentPart = 1;
+      } else {
+        partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_OFF;
+      }
+    } else if (!pinReads[1] || pinReads[2] || pinReads[3] || pinReads[4]) {
+      partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_INCORRECT;
+    }
+  } else if (currentPart == 1) {
+    if (pinReads[0] && !pinReads[2] && !pinReads[3] && !pinReads[4]) {
+      if (pinReads[1]) {
+        partStates[1] = REGION_CORRECT;
+        currentPart = 2;
+      } else {
+        partStates[0] = REGION_CORRECT;
+        partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_OFF;
+      }
+    } else if (!pinReads[0] || pinReads[2] || pinReads[3] || pinReads[4]) {
+      partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_INCORRECT;
+    }
+  } else if (currentPart == 2) {
+    if (pinReads[0] && pinReads[1] && !pinReads[3] && !pinReads[4]) {
+      if (pinReads[2]) {
+        partStates[2] = REGION_CORRECT;
+        currentPart = 3;
+      } else {
+        partStates[0] = partStates[1] = REGION_CORRECT;
+        partStates[2] = partStates[3] = partStates[4] = REGION_OFF;
+      }
+    } else if (!pinReads[0] || !pinReads[1] || pinReads[3] || pinReads[4]) {
+      partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_INCORRECT;
+    }
+  } else if (currentPart == 3) {
+    if (pinReads[0] && pinReads[1] && pinReads[2] && !pinReads[4]) {
+      if (pinReads[3]) {
+        partStates[3] = REGION_CORRECT;
+        currentPart = 4;
+      } else {
+        partStates[0] = partStates[1] = partStates[2] = REGION_CORRECT;
+        partStates[3] = partStates[4] = REGION_OFF;
+      }
+    } else if (!pinReads[0] || !pinReads[1] || !pinReads[2] || pinReads[4]) {
+      partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_INCORRECT;
+    }
+  } else if (currentPart == 4) {
+    if (pinReads[0] && pinReads[1] && pinReads[2] && pinReads[3]) {
+      if (pinReads[4]) {
+        partStates[4] = REGION_CORRECT;
+        currentPart = 5;
+      } else {
+        partStates[0] = partStates[1] = partStates[2] = partStates[3] = REGION_CORRECT;
+        partStates[4] = REGION_OFF;
+      }
+    } else if (!pinReads[0] || !pinReads[1] || !pinReads[2] || !pinReads[3]) {
+      partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_INCORRECT;
+    }
+  } else if (currentPart == 5) {
     partStates[0] = partStates[1] = partStates[2] = partStates[3] = partStates[4] = REGION_END;
-    return;
-  }
-  
-  if (partStates[currentPart] == REGION_OFF) {
-    partStates[currentPart] = REGION_CORRECT;
-  } else if (partStates[currentPart] == REGION_CORRECT) {
-    partStates[currentPart] = REGION_INCORRECT;
-  } else if (partStates[currentPart] == REGION_INCORRECT) {
-    partStates[currentPart] = REGION_CORRECT;
-    currentPart++;
   }
 }
