@@ -7,17 +7,17 @@ This document describes what you will find in this repo, and how can you rebuild
 
 ## I Can Move On
 
-A storm passed a few days ago
-It took my house, leaving me unprotected
-The sky is grey, there’s no trees
+A storm passed a few days ago  
+It took my house, leaving me unprotected  
+The sky is grey, there’s no trees  
 It’s just me standing, revealed
 
-I’m trying to find the last piece of a puzzle
-The one that will help me to move on
-I think I found it, the storm brought it to me
+I’m trying to find the last piece of a puzzle  
+The one that will help me to move on  
+I think I found it, the storm brought it to me  
 It took everything else, but gave me that little piece
 
-Yes, I don’t have a house
+Yes, I don’t have a house  
 But at least I know I can move on
 
 ## Requirements
