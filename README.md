@@ -24,7 +24,7 @@ But at least I know I can move on
 
 This game requires to build a cardboard device, some game pieces, and some circuitry.
 
-This game also requires an Arduino (we used an Arduino Mega, but it could be an Arduino UNO), a 32x32 RGB Adafruit Matrix screen, and kitchen foil for closing the circuits.
+This game also requires an Arduino (we used an Arduino Mega, but it could be an Arduino UNO), a [https://www.adafruit.com/product/2026](32x32 RGB Adafruit Matrix screen), and kitchen foil for closing the circuits.
 
 ## This repo
 

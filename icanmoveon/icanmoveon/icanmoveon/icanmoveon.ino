@@ -62,6 +62,14 @@ void setup() {
   pinMode(part5Pin, INPUT);
 
   matrix.begin();
+
+  matrix.fillScreen(matrix.Color333(7,0,0));
+  delay(500);
+  matrix.fillScreen(matrix.Color333(0,7,0));
+  delay(500);
+  matrix.fillScreen(matrix.Color333(0,0,7));
+  delay(500);
+  matrix.fillScreen(matrix.Color333(0,0,0));
 }
 
 void loop() {
